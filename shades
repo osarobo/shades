@@ -1,0 +1,32 @@
+#!/bin/bash
+#*********************************************************************
+# Filename:     fluxadj.sh
+# Description:  A program module or script to adjust screen bluelight
+# Author:       Osarobo Omokaro <osa.Omokaro@linuxsmarts.com>
+# Created at:   Sun May 22 2016
+# Modified by:  Osarobo Omokaro <osa.omokaro@linuxsmarts.com>
+# Modified at:  Sun July 10 2016
+# Version:	1.0
+
+# Gets connected displays and assign as an array to variable vgaview
+vgaview=( `xrandr | grep -w "connected" | cut -d' ' -f1 -` )
+
+# assess total display elements - 1 in vgaview for iteration
+limit=$((${#vgaview[@]}-1))
+
+# Lower blue light	
+if [ "$1" = '-l' ]; then
+	for ((a=0; a <= limit; a++)); do
+		`xrandr --output ${vgaview[$a]}  --gamma 1.0:1.0:0.4 --brightness 0.6`
+	done
+	echo 'Blue light and brightness lowered.'
+fi
+
+# Normalize
+if [ "$1" = '-n' ]; then
+	for ((a=0; a <= limit; a++)); do
+		`xrandr --output ${vgaview[$a]} --gamma 1.0:1.0:1.0 --brightness 1.0`
+	done
+	echo 'Brightness and Blue light normalized.'
+fi
+
